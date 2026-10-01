@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="nl"><head><meta charset="utf-8"><title>Affect-us demo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root{--bg:#faf9f7;--card:#fff;--text:#141414;--muted:#6b6b66;--border:#e6e4df;--acc:#d3e2f8;--acct:#1f4a8f;--pri:#0b0b0b;--prit:#fff;--side:#181b3a;--sidea:#3556e6;--ok:#1f6a2a;--warn:#7a4a0f;--soft:#f3f2ef;--bw:1px;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121214;--card:#1b1b1f;--text:#f2f2f0;--muted:#a1a19b;--border:#34343a;--acc:#24385f;--acct:#bcd3ff;--pri:#f2f2f0;--prit:#111;--side:#0d0f24;--ok:#6fd08a;--warn:#e0b36a;--soft:#232328}}
+:root[data-theme="dark"]{--bg:#121214;--card:#1b1b1f;--text:#f2f2f0;--muted:#a1a19b;--border:#34343a;--acc:#24385f;--acct:#bcd3ff;--pri:#f2f2f0;--prit:#111;--side:#0d0f24;--ok:#6fd08a;--warn:#e0b36a;--soft:#232328}
+:root[data-contrast="high"]{--muted:var(--text);--border:var(--text);--bw:2px;--ok:var(--text);--warn:var(--text);--acct:var(--text)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+.bar{display:flex;height:34px;border-radius:10px;overflow:hidden;border:var(--bw) solid var(--border);font-size:14px}.bar span{display:grid;place-items:center;white-space:nowrap}
+.meter{height:12px;border-radius:99px;background:var(--soft);border:var(--bw) solid var(--border);overflow:hidden}.meter i{display:block;height:100%;background:var(--sidea)}
+.mom{display:flex;gap:14px;align-items:center;width:100%;text-align:left;background:none;border:0;border-bottom:var(--bw) solid var(--border);padding:12px 4px;cursor:pointer}.mom:last-child{border-bottom:0}.mom:hover{background:var(--soft)}.mom b{min-width:56px;color:var(--acct)}
+.player{aspect-ratio:16/9;border-radius:14px;background:#14162e;color:#fff;display:grid;place-items:center;position:relative}.player .pb{width:60px;height:60px;border-radius:50%;background:rgba(255,255,255,.18);display:grid;place-items:center;font-size:24px}.player .tl{position:absolute;left:14px;right:14px;bottom:14px;height:6px;border-radius:9px;background:rgba(255,255,255,.25)}.player .tl i{position:absolute;top:-3px;width:4px;height:12px;border-radius:2px;background:#ffd36b}
+.big{font-size:34px;font-weight:600;line-height:1.1}
+body{margin:0;background:var(--bg);color:var(--text);font:400 15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}
+button,input,select{font:inherit;color:inherit}
+.ic{width:18px;height:18px;flex:none}
+.app{display:flex;min-height:100vh}
+aside{width:232px;background:var(--side);color:#c9cde8;padding:20px 12px;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;flex:none}
+.brand{padding:0 10px 18px;color:#fff}.brand b{font-size:19px;display:block}.brand small{color:#9aa0c8}
+nav{display:flex;flex-direction:column;gap:4px}
+.nv{display:flex;gap:12px;align-items:center;padding:10px;border-radius:10px;background:none;border:0;color:inherit;cursor:pointer;text-align:left;width:100%}
+.nv:hover{background:rgba(255,255,255,.07)}.nv.on{background:var(--sidea);color:#fff}
+.sp{flex:1}
+.me{margin-top:10px;padding:10px 12px;border-radius:10px;background:rgba(0,0,0,.3);color:#fff}.me small{display:block;color:#9aa0c8}
+main{flex:1;min-width:0;padding:28px clamp(16px,4vw,48px) 60px}
+.wrap{max-width:760px;margin:0 auto}.wide{max-width:960px}
+.demo{background:var(--acc);color:var(--acct);border:var(--bw) solid var(--border);border-radius:10px;padding:8px 14px;margin:0 auto 22px;max-width:960px;font-size:14px}
+.hd{display:flex;gap:14px;align-items:center;margin-bottom:22px}
+.hd .bx{width:46px;height:46px;border-radius:12px;background:var(--acc);color:var(--acct);display:grid;place-items:center;flex:none}
+h1{font-size:23px;margin:0;font-weight:600;letter-spacing:-.01em}.sub{color:var(--muted);margin:0}
+.card{background:var(--card);border:var(--bw) solid var(--border);border-radius:16px;padding:22px;margin-bottom:16px}
+.card h2{font-size:17px;margin:0 0 2px;font-weight:600}
+.btn{background:var(--pri);color:var(--prit);border:var(--bw) solid var(--pri);border-radius:10px;padding:10px 16px;font-weight:500;cursor:pointer}
+.btn.o{background:var(--card);color:var(--text);border-color:var(--border)}.btn:disabled{opacity:.4;cursor:not-allowed}.btn.full{width:100%;padding:13px}
+.btn:focus-visible,.nv:focus-visible,input:focus-visible,select:focus-visible,.seg button:focus-visible,.tab:focus-visible{outline:3px solid var(--sidea);outline-offset:2px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:22px}
+.stat{background:var(--card);border:var(--bw) solid var(--border);border-radius:14px;padding:16px}.stat b{font-size:30px;display:block;line-height:1.2}.stat span{color:var(--muted);font-size:14px}
+table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:12px 14px;border-bottom:var(--bw) solid var(--border)}th{color:var(--muted);font-weight:500;font-size:14px}tr:last-child td{border-bottom:0}
+.tbl{background:var(--card);border:var(--bw) solid var(--border);border-radius:16px;overflow-x:auto}
+.pill{display:inline-block;padding:2px 12px;border-radius:99px;background:var(--soft);font-size:14px;border:var(--bw) solid transparent}.pill.a{background:var(--acc);color:var(--acct)}
+.ok{color:var(--ok)}.wn{color:var(--warn)}
+.lbl{font-weight:600;display:block;margin:14px 0 6px}.lbl i{font-style:normal;display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--soft);color:var(--muted);margin-right:8px;font-size:13px}.lbl i.on{background:var(--pri);color:var(--prit)}
+input[type=text],input[type=email],input[type=password],input[type=search],select{width:100%;padding:11px 12px;border-radius:10px;border:var(--bw) solid var(--border);background:var(--card)}
+.drop{display:grid;place-items:center;text-align:center;border:2px dashed var(--border);border-radius:14px;padding:34px 16px;color:var(--muted);cursor:pointer}.drop.has{border-style:solid;color:var(--text)}
+.seg{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}.seg button{padding:11px;border-radius:10px;border:var(--bw) solid var(--border);background:var(--soft);cursor:pointer}.seg button.on{background:var(--acc);color:var(--acct);border-color:var(--acct)}
+.hint{color:var(--muted);font-size:14px;margin:8px 0}
+.chk{display:flex;gap:10px;align-items:center;padding:7px 0}.chk input{width:18px;height:18px}
+.tabs{display:flex;gap:6px;overflow-x:auto;border-bottom:var(--bw) solid var(--border);margin-bottom:18px}.tab{background:none;border:0;padding:10px 14px;cursor:pointer;color:var(--muted);border-bottom:3px solid transparent;white-space:nowrap}.tab.on{color:var(--acct);border-color:var(--acct);font-weight:600}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.err{color:#c0392b;font-size:14px;margin:6px 0}:root[data-contrast="high"] .err{color:var(--text);font-weight:600}
+.opt{display:flex;flex-direction:column;align-items:center;gap:6px}
+.vid{display:flex;gap:14px;align-items:center;flex-wrap:wrap;justify-content:space-between;padding:14px 18px}
+.chips{display:flex;gap:8px;margin:14px 0}.chips button{padding:7px 16px;border-radius:10px;border:var(--bw) solid var(--border);background:var(--card);cursor:pointer}.chips button.on{background:var(--sidea);border-color:var(--sidea);color:#fff}
+.sw{width:46px;height:26px;border-radius:99px;border:var(--bw) solid var(--border);background:var(--soft);position:relative;cursor:pointer;flex:none}.sw::after{content:"";position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:var(--muted);transition:transform .15s}.sw.on{background:var(--acc)}.sw.on::after{transform:translateX(20px);background:var(--acct)}
+dialog{border:var(--bw) solid var(--border);border-radius:16px;background:var(--card);color:var(--text);padding:24px;width:min(420px,92vw)}dialog::backdrop{background:rgba(0,0,0,.45)}
+#toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--pri);color:var(--prit);padding:11px 18px;border-radius:12px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:9}#toast.show{opacity:1}
+@media(max-width:800px){.app{flex-direction:column}aside{width:auto;height:auto;position:static;padding:12px}nav{flex-direction:row;overflow-x:auto}.nv{width:auto;white-space:nowrap}.sp{display:none}.grid2{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style></head>
+<body>
+<div class="app"><aside><div class="brand"><b>Affect-us</b><small>Video coding platform</small></div><nav id="nav"></nav><div class="sp"></div><nav id="nav2"></nav><div class="me" id="me"></div></aside>
+<main><div class="demo">Dit is een demo met voorbeelddata. Klik rond om te zien hoe de nieuwe pagina's werken.</div><div id="view"></div></main></div>
+<div id="toast" role="status"></div><dialog id="dlg"></dialog>
+<script>
+const IC={grid:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>',users:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6M16 4.6a3.5 3.5 0 010 6.8M18 14.4c2 .7 3.5 2.4 3.5 5.6"/>',upload:'<path d="M12 16V4M7 9l5-5 5 5M4 20h16"/>',video:'<rect x="2.5" y="6" width="13" height="12" rx="2"/><path d="M15.5 10.5l6-3.5v10l-6-3.5"/>',shield:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/>',set:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9L7 7M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/>',out:'<path d="M9 4H5v16h4M16 8l4 4-4 4M20 12H9"/>',edit:'<path d="M4 20h4L19 9l-4-4L4 16zM13 7l4 4"/>',trash:'<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>'};
+const I=n=>`<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IC[n]}</svg>`;
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const $=s=>document.querySelector(s);
+const MODS=['Dashboard','Deelnemers','Uploaden',"Video's",'Gebruikers'];
+const PAGES=[['dash','Dashboard','grid'],['deeln','Deelnemers','users'],['up','Uploaden','upload'],['vid',"Video's",'video'],['usr','Gebruikers','shield']];
+const TODAY=new Date().toLocaleDateString('nl-NL',{day:'numeric',month:'long',year:'numeric'});
+const BAD=['klootzak','rotzak','idioot','lul','kut'];
+const S={cur:0,page:'dash',tab:'Profiel',filter:'Alle',q:'',yr:'',me:{name:'Admin',email:'admin@affect-us.nl'},theme:'system',contrast:'std',tfa:false,notif:[true,true,false],
+users:[{id:1,name:'admin',role:'Admin',mods:MODS.slice()},{id:2,name:'test',role:'Researcher',mods:['Deelnemers','Uploaden',"Video's"]},{id:3,name:'lisa',role:'Researcher',mods:["Video's"]}],
+parts:[['P-014',2025,2],['P-021',2025,1],['P-032',2026,3],['P-045',2026,1],['P-052',2026,0]],
+vids:[{id:142,p:'P-032',d:'1 september 2026',st:'Geanalyseerd',vis:'all',who:[]},{id:141,p:'P-014',d:'28 augustus 2026',st:'Wachtend',vis:'roles',who:['Researcher']},{id:140,p:'P-045',d:'24 augustus 2026',st:'Geanalyseerd',vis:'people',who:['lisa']}],
+up:{p:'',file:'',vis:'all',who:[]}};
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('show'),2400)}
+function hd(i,t,s,btn=''){return `<div class="hd"><div class="bx">${I(i)}</div><div style="flex:1"><h1>${t}</h1><p class="sub">${s}</p></div>${btn}</div>`}
+function visTxt(v){return v.vis==='all'?'Iedereen':v.vis==='roles'?'Rol: '+(v.who.join(', ')||'geen'):v.who.length+' persoon'+(v.who.length==1?'':'en')}
+const V={
+dash(){const v=S.vids,a=v.filter(x=>x.st==='Geanalyseerd').length;
+return `<div class="wide wrap"><div class="hd"><div style="flex:1"><h1>Onderzoeksoverzicht</h1><p class="sub">${TODAY}</p></div></div>
+<div class="stats"><div class="stat"><b>${S.parts.length}</b><span>Deelnemers</span></div><div class="stat"><b>${v.length}</b><span>Video's</span></div><div class="stat"><b>${a}</b><span>Analyses afgerond</span></div><div class="stat"><b>${v.length-a}</b><span>Wacht op analyse</span></div></div>
+<h2 style="font-size:17px">Recente sessies</h2><div class="tbl">${v.slice(0,5).map(x=>`<div class="vid"><span><b>Sessie #${x.id}</b> <span class="sub">${x.p}, ${x.d}</span></span><span class="pill ${x.st==='Geanalyseerd'?'a':''}">${x.st}</span></div>`).join('')}</div></div>`},
+deeln(){const yrs=[...new Set(S.parts.map(p=>p[1]))];
+return `<div class="wrap wide">${hd('users','Deelnemers','Zoek en beheer deelnemers via hun pseudo-code.',`<button class="btn o" data-a="toast" data-v="Export gestart (demo)">Exporteer alle CSV</button><button class="btn" data-a="toast" data-v="Hier komt het formulier voor een nieuwe deelnemer">Nieuwe deelnemer</button>`)}
+<div class="grid2" style="grid-template-columns:1fr 160px;margin-bottom:16px"><input type="search" id="q" placeholder="Zoek op pseudo-code" aria-label="Zoek op pseudo-code" value="${esc(S.q)}"><select id="yr" aria-label="Jaar"><option value="">Alle jaren</option>${yrs.map(y=>`<option ${S.yr==y?'selected':''}>${y}</option>`).join('')}</select></div><div id="dl"></div></div>`},
+up(){const u=S.up,vis=u.vis;let n=3;
+const who=vis==='roles'?['Admin','Researcher']:S.users.map(x=>x.name);
+return `<div class="wrap">${hd('upload','Sessie uploaden','Koppel een videobestand aan een deelnemer')}
+<div class="card"><span class="lbl"><i class="on">1</i>Kies een deelnemer</span><select id="up-p" aria-label="Deelnemer"><option value="">Selecteer een deelnemer…</option>${S.parts.map(p=>`<option ${u.p===p[0]?'selected':''}>${p[0]}</option>`).join('')}</select>
+<span class="lbl"><i class="${u.p?'on':''}">2</i>Kies een videobestand</span><label class="drop ${u.file?'has':''}" id="drop">${u.file?esc(u.file):'Klik om een bestand te kiezen'}<input type="file" id="up-f" accept="video/*" hidden></label>
+<span class="lbl"><i class="${u.file?'on':''}">3</i>Wie mag dit zien?</span>
+<div class="seg">${[['all','Iedereen'],['roles','Bepaalde rollen'],['people','Specifieke personen']].map(([k,t])=>`<button data-a="vis" data-v="${k}" class="${vis===k?'on':''}">${t}</button>`).join('')}</div>
+<p class="hint">${vis==='all'?'Zichtbaar voor alle gebruikers met toegang tot het platform.':vis==='roles'?'Alleen zichtbaar voor gebruikers met een van deze rollen.':'Alleen zichtbaar voor de personen die je aanvinkt.'}</p>
+${vis==='all'?'':who.map(w=>`<label class="chk"><input type="checkbox" data-a="who" data-v="${w}" ${u.who.includes(w)?'checked':''}>${esc(w)}</label>`).join('')}
+<p class="hint" style="margin-top:16px">De datum en tijd van de upload worden automatisch opgeslagen.</p>
+<button class="btn full" id="up-b" data-a="send"  disabled>Uploaden</button></div></div>`},
+vid(){const L=S.vids.filter(x=>S.filter==='Alle'||(S.filter==='Wachtend'?x.st==='Wachtend':x.st==='Geanalyseerd')),a=S.vids.filter(x=>x.st==='Geanalyseerd').length;
+return `<div class="wrap wide">${hd('video',"Video's",'Alle geüploade video\'s waar jij toegang toe hebt')}
+<div class="stats"><div class="stat"><b>${S.vids.length}</b><span>Totaal</span></div><div class="stat"><b class="wn">${S.vids.length-a}</b><span>Wacht op analyse</span></div><div class="stat"><b class="ok">${a}</b><span>Geanalyseerd</span></div></div>
+<div class="chips">${['Alle','Wachtend','Geanalyseerd'].map(f=>`<button data-a="flt" data-v="${f}" class="${S.filter===f?'on':''}">${f}</button>`).join('')}</div>
+<div class="tbl">${L.length?L.map(x=>`<div class="vid" style="border-bottom:var(--bw) solid var(--border)"><span><b>Sessie #${x.id}</b><br><span class="sub">${x.p}, geüpload op ${x.d}</span></span><span class="pill">${I('shield')} ${esc(visTxt(x))}</span><span class="pill ${x.st==='Geanalyseerd'?'a':''}">${x.st}</span><button class="btn" data-a="view" data-v="${x.id}">Bekijken</button></div>`).join(''):'<div class="vid sub">Geen video\'s gevonden.</div>'}</div></div>`},
+det(){const x=S.vids.find(v=>v.id==S.cur)||S.vids[0];let sd=x.id*7;const r=()=>(sd=(sd*9301+49297)%233280)/233280;
+const score=58+Math.floor(r()*32),pat=48+Math.floor(r()*20),therap=100-pat,words=Math.round(2400+r()*1600),dur=34+Math.floor(r()*18),pause=(1.2+r()*2).toFixed(1),wpm=Math.round(105+r()*45);
+const raw=[34,30,24,16,10],tot=raw.reduce((a,b)=>a+b,0);const emo=[['Blij',raw[0]],['Neutraal',raw[1]],['Verdrietig',raw[2]],['Angstig',raw[3]],['Boos',raw[4]]].map(([n,v])=>[n,Math.round(v*100/tot+(r()*6-3))]);
+const pts=[];let v=45+r()*20;for(let i=0;i<24;i++){v=Math.max(8,Math.min(92,v+(r()*30-14)));pts.push(v)}
+const path=pts.map((y,i)=>(i*600/23).toFixed(1)+','+(150-y*1.4).toFixed(1)).join(' ');
+const C=2*Math.PI*52,mom=[['04:12','Patiënt spreekt openlijk over slaapproblemen'],['12:40','Duidelijke stemmingsdaling, lange pauze'],['21:05','Behandelaar vat samen, patiënt reageert positief'],['33:30','Piek in spreektempo bij het onderwerp werk']];
+const dt=['Wachtend'===x.st?`<div class="demo" style="max-width:none;margin:0 0 18px">Deze sessie is nog niet geanalyseerd. Hieronder staat een voorbeeld van hoe de analyse eruitziet zodra die klaar is.</div>`:''];
+return `<div class="wrap wide"><button class="btn o" data-a="go" data-v="vid" style="margin-bottom:16px">Terug naar video's</button>
+${hd('video','Sessie #'+x.id,x.p+', geüpload op '+x.d,`<span class="pill ${x.st==='Geanalyseerd'?'a':''}">${x.st}</span>`)}${dt[0]}
+<div class="grid2" style="margin-bottom:16px"><div class="player" role="img" aria-label="Videospeler met markeringen"><div class="pb">&#9654;</div><div class="tl">${mom.map((m,i)=>`<i style="left:${[10,31,52,82][i]}%"></i>`).join('')}</div></div>
+<div class="card" style="margin:0;display:flex;gap:20px;align-items:center"><svg viewBox="0 0 120 120" width="120" height="120" role="img" aria-label="Score ${score} van 100"><circle cx="60" cy="60" r="52" fill="none" stroke="var(--soft)" stroke-width="12"/><circle cx="60" cy="60" r="52" fill="none" stroke="var(--sidea)" stroke-width="12" stroke-linecap="round" stroke-dasharray="${(C*score/100).toFixed(1)} ${C}" transform="rotate(-90 60 60)"/><text x="60" y="68" text-anchor="middle" font-size="30" font-weight="600" fill="var(--text)">${score}</text></svg><div><h2>Welbevinden-score</h2><p class="sub">Score van 0 tot 100 voor deze sessie. Hoger betekent meer positieve en open communicatie.</p></div></div></div>
+<div class="stats"><div class="stat"><b>${dur} min</b><span>Duur van de sessie</span></div><div class="stat"><b>${words}</b><span>Woorden door patiënt</span></div><div class="stat"><b>${wpm}</b><span>Woorden per minuut</span></div><div class="stat"><b>${pause} s</b><span>Gemiddelde pauze</span></div></div>
+<div class="card"><h2>Spreektijd</h2><p class="sub" style="margin-bottom:12px">Wie praat hoeveel in deze sessie?</p><div class="bar"><span style="width:${pat}%;background:var(--sidea);color:#fff">Patiënt ${pat}%</span><span style="width:${therap}%;background:var(--soft)">Behandelaar ${therap}%</span></div></div>
+<div class="card"><h2>Stemming tijdens de sessie</h2><p class="sub">Verloop van negatief naar positief over de tijd.</p><svg viewBox="0 0 600 170" width="100%" role="img" aria-label="Lijngrafiek stemming over tijd" style="margin-top:10px"><line x1="0" y1="80" x2="600" y2="80" stroke="var(--border)" stroke-dasharray="4 4"/><polyline points="${path}" fill="none" stroke="var(--sidea)" stroke-width="3" stroke-linejoin="round"/><text x="0" y="14" font-size="12" fill="var(--muted)">Positief</text><text x="0" y="166" font-size="12" fill="var(--muted)">Negatief</text></svg><div class="row" style="color:var(--muted);font-size:14px"><span>0 min</span><span>${Math.round(dur/2)} min</span><span>${dur} min</span></div></div>
+<div class="card"><h2>Emoties</h2><p class="sub" style="margin-bottom:8px">Verdeling van de herkende emoties bij de patiënt.</p>${emo.map(([n,p])=>`<div class="row" style="flex-wrap:nowrap;margin:10px 0"><span style="width:92px">${n}</span><div class="meter" style="flex:1"><i style="width:${Math.max(p,2)}%"></i></div><b style="width:44px;text-align:right">${p}%</b></div>`).join('')}</div>
+<div class="card"><h2>Belangrijke momenten</h2><p class="sub" style="margin-bottom:6px">Klik op een moment om naar die plek in de video te gaan.</p>${mom.map(([t,d])=>`<button class="mom" data-a="mom" data-v="${t}"><b>${t}</b><span>${d}</span></button>`).join('')}</div>
+<p class="hint">Alle cijfers op deze pagina zijn voorbeelddata.</p></div>`},
+usr(){return `<div class="wrap wide">${hd('users','Gebruikersbeheer','Beheer accounts, rollen en toegang',`<button class="btn" data-a="usr" data-v="0">Nieuwe gebruiker</button>`)}
+<div class="tbl"><table><tr><th>ID</th><th>Gebruikersnaam</th><th>Rol</th><th>Toegang</th><th>Acties</th></tr>${S.users.map(u=>`<tr><td>${u.id}</td><td>${esc(u.name)}</td><td><span class="pill ${u.role==='Admin'?'a':''}">${u.role}</span></td><td class="${u.role==='Admin'?'ok':'wn'}">${u.role==='Admin'?'Volledige toegang':'Beperkt: '+u.mods.length+' module'+(u.mods.length==1?'':'s')}</td><td><button class="btn o" style="padding:6px 8px" data-a="usr" data-v="${u.id}" aria-label="Bewerk ${esc(u.name)}">${I('edit')}</button> <button class="btn o" style="padding:6px 8px" data-a="del" data-v="${u.id}" aria-label="Verwijder ${esc(u.name)}">${I('trash')}</button></td></tr>`).join('')}</table></div></div>`},
+set(){const T=['Profiel','Beveiliging','Notificaties','Weergave','Account'];
+return `<div class="wrap"><div class="tabs" role="tablist">${T.map(t=>`<button class="tab ${S.tab===t?'on':''}" role="tab" data-a="tab" data-v="${t}">${t}</button>`).join('')}</div>${TAB[S.tab]()}</div>`}};
+const TAB={
+Profiel(){return `<div class="card"><h2>Profiel</h2><p class="sub">Je naam en contactgegevens.</p><div class="row" style="justify-content:flex-start;margin:16px 0"><div style="width:64px;height:64px;border-radius:50%;background:var(--acc);color:var(--acct);display:grid;place-items:center;font-size:24px">${esc(S.me.name[0].toUpperCase())}</div><button class="btn o" data-a="toast" data-v="Hier kies je een nieuwe foto (demo)">Foto wijzigen</button></div>
+<div class="grid2"><div><span class="lbl" style="margin:0 0 6px">Volledige naam</span><input type="text" id="pn" value="${esc(S.me.name)}"></div><div><span class="lbl" style="margin:0 0 6px">E-mailadres</span><input type="email" id="pe" value="${esc(S.me.email)}"></div></div><div class="err" id="pErr" role="alert"></div><button class="btn" data-a="saveP">Wijzigingen opslaan</button><p class="hint">Namen worden gecontroleerd op ongepaste woorden.</p></div>`},
+Beveiliging(){return `<div class="card"><h2>Wachtwoord wijzigen</h2><p class="sub">Kies een nieuw wachtwoord van minimaal 8 tekens.</p><span class="lbl">Huidig wachtwoord</span><input type="password" id="w0" placeholder="Vul je huidige wachtwoord in"><span class="lbl">Nieuw wachtwoord</span><input type="password" id="w1" placeholder="Minimaal 8 tekens"><span class="lbl">Bevestig nieuw wachtwoord</span><input type="password" id="w2" placeholder="Herhaal nieuw wachtwoord"><div class="err" id="wErr" role="alert"></div><button class="btn" data-a="saveW" style="margin-top:12px">Wachtwoord opslaan</button></div>
+<div class="card row"><div><h2>Tweestapsverificatie</h2><p class="sub">Extra beveiligingslaag bij het inloggen.</p></div><button class="btn o" data-a="tfa">${S.tfa?'Uitschakelen':'Inschakelen'}</button></div>`},
+Notificaties(){return `<div class="card"><h2>Notificaties</h2><p class="sub">Kies waarover je een melding krijgt.</p>${['Nieuwe sessie geüpload','Nieuwe gebruiker toegevoegd','Wekelijkse samenvatting per e-mail'].map((t,i)=>`<label class="chk row" style="padding:12px 0"><span>${t}</span><input type="checkbox" data-a="nt" data-v="${i}" ${S.notif[i]?'checked':''}></label>`).join('')}</div>`},
+Weergave(){const o=(k,v,t,ic)=>`<button data-a="${k}" data-v="${v}" class="${S[k==='th'?'theme':'contrast']===v?'on':''}">${t}</button>`;
+return `<div class="card"><h2>Weergave</h2><p class="sub">Kies hoe het platform eruitziet.</p><span class="lbl">Thema</span><div class="seg">${o('th','system','Systeem')}${o('th','light','Licht')}${o('th','dark','Donker')}</div>
+<span class="lbl">Contrast</span><p class="hint" style="margin-top:0">Hoog contrast maakt tekst en randen beter leesbaar.</p><div class="seg">${o('ct','std','Standaard')}${o('ct','high','Hoog contrast')}</div>
+<span class="lbl">Voorbeeld</span><div style="background:var(--soft);border:var(--bw) solid var(--border);border-radius:14px;padding:18px"><b style="font-size:18px">Sessie #142</b><p class="sub">Geüpload op 1 september 2026</p><button class="btn" data-a="toast" data-v="Zo ziet een knop eruit">Bekijken</button></div></div>`},
+Account(){return `<div class="card"><h2>Account</h2><p class="sub">Je gebruikersnaam en rol kun je niet zelf wijzigen. Vraag dit aan een admin.</p><p><b>Gebruikersnaam:</b> admin<br><b>Rol:</b> Admin</p></div>`}};
+function dl(){const q=S.q.toLowerCase(),L=S.parts.filter(p=>p[0].toLowerCase().includes(q)&&(!S.yr||p[1]==S.yr));
+$('#dl').innerHTML=L.length?`<div class="tbl"><table><tr><th>Pseudo-code</th><th>Jaar</th><th>Sessies</th></tr>${L.map(p=>`<tr><td><b>${p[0]}</b></td><td>${p[1]}</td><td>${p[2]}</td></tr>`).join('')}</table></div>`:'<p class="sub">Geen deelnemers gevonden.</p>'}
+function updUp(){const b=$('#up-b');if(b)b.disabled=!(S.up.p&&S.up.file)}
+function render(){const act=S.page==='det'?'vid':S.page;
+$('#nav').innerHTML=PAGES.map(p=>`<button class="nv ${act===p[0]?'on':''}" data-a="go" data-v="${p[0]}">${I(p[2])}${p[1]}</button>`).join('');
+$('#nav2').innerHTML=`<button class="nv ${act==='set'?'on':''}" data-a="go" data-v="set">${I('set')}Instellingen</button><button class="nv" data-a="toast" data-v="Uitloggen werkt niet in de demo">${I('out')}Uitloggen</button>`;
+$('#me').innerHTML=`<b>${esc(S.me.name.toLowerCase())}</b><small>Admin</small>`;
+$('#view').innerHTML=V[S.page]();if(S.page==='deeln')dl();updUp();
+const r=document.documentElement;S.theme==='system'?r.removeAttribute('data-theme'):r.setAttribute('data-theme',S.theme);r.dataset.contrast=S.contrast}
+function userDlg(id){const u=S.users.find(x=>x.id==id)||{id:0,name:'',role:'Researcher',mods:[]};const d=$('#dlg');
+d.innerHTML=`<h2 style="margin-top:0">${u.id?'Gebruiker bewerken':'Nieuwe gebruiker'}</h2><span class="lbl">Gebruikersnaam</span><input type="text" id="un" value="${esc(u.name)}" ${u.id?'disabled':''}><span class="lbl">Rol</span><select id="ur"><option ${u.role==='Admin'?'selected':''}>Admin</option><option ${u.role!=='Admin'?'selected':''}>Researcher</option></select><span class="lbl">Toegang tot modules</span><p class="hint" style="margin-top:0">Admins hebben altijd volledige toegang.</p>${MODS.map(m=>`<label class="chk"><input type="checkbox" class="um" value="${m}" ${u.mods.includes(m)?'checked':''}>${m}</label>`).join('')}<div class="row" style="justify-content:flex-end;margin-top:14px"><button class="btn o" data-a="close">Annuleren</button><button class="btn" data-a="saveU" data-v="${u.id}">Opslaan</button></div>`;d.showModal()}
+const A={
+go(v){S.page=v;window.scrollTo(0,0);render()},view(v){S.cur=+v;S.page='det';window.scrollTo(0,0);render()},mom(v){toast('Springt naar '+v+' in de video (demo)')},toast(v){toast(v)},tab(v){S.tab=v;render()},flt(v){S.filter=v;render()},
+vis(v){S.up.vis=v;S.up.who=[];render()},
+who(v,t){const w=S.up.who;t.checked?w.push(v):S.up.who=w.filter(x=>x!==v)},
+send(){const u=S.up,n=new Date(),d=TODAY+' om '+n.toLocaleTimeString('nl-NL',{hour:'2-digit',minute:'2-digit'});S.vids.unshift({id:S.vids[0].id+1,p:u.p,d,st:'Wachtend',vis:u.vis,who:u.vis==='all'?[]:u.who.slice()});S.up={p:'',file:'',vis:'all',who:[]};toast('Sessie geüpload. Zichtbaar voor: '+visTxt(S.vids[0]));S.page='vid';render()},
+th(v){S.theme=v;render()},ct(v){S.contrast=v;render()},tfa(){S.tfa=!S.tfa;toast(S.tfa?'Tweestapsverificatie staat aan':'Tweestapsverificatie staat uit');render()},nt(v,t){S.notif[v]=t.checked},
+saveP(){const n=$('#pn').value.trim(),e=$('#pe').value.trim(),er=$('#pErr');
+if(!n){er.textContent='Vul een naam in.';return}
+if(BAD.some(w=>n.toLowerCase().includes(w))){er.textContent='Deze naam is niet toegestaan. Kies een andere naam.';return}
+S.me={name:n,email:e};toast('Profiel opgeslagen');render()},
+saveW(){const a=$('#w0').value,b=$('#w1').value,c=$('#w2').value,er=$('#wErr');
+if(!a)er.textContent='Vul je huidige wachtwoord in.';else if(b.length<8)er.textContent='Je nieuwe wachtwoord heeft minimaal 8 tekens nodig.';else if(b!==c)er.textContent='De twee nieuwe wachtwoorden zijn niet gelijk.';else{toast('Wachtwoord opgeslagen');render()}},
+usr(v){userDlg(v)},close(){$('#dlg').close()},
+saveU(v){const name=$('#un').value.trim();if(!name){toast('Vul een gebruikersnaam in');return}
+const role=$('#ur').value,mods=[...document.querySelectorAll('.um:checked')].map(x=>x.value);
+if(+v){Object.assign(S.users.find(x=>x.id==v),{role,mods})}else S.users.push({id:Math.max(...S.users.map(x=>x.id))+1,name,role,mods});
+$('#dlg').close();toast('Gebruiker opgeslagen');render()},
+del(v){if(v==1){toast('Het admin-account kan niet verwijderd worden');return}S.users=S.users.filter(x=>x.id!=v);toast('Gebruiker verwijderd');render()}};
+document.addEventListener('click',e=>{const t=e.target.closest('[data-a]');if(t&&A[t.dataset.a])A[t.dataset.a](t.dataset.v,t)});
+document.addEventListener('input',e=>{if(e.target.id==='q'){S.q=e.target.value;dl()}});
+document.addEventListener('change',e=>{const t=e.target;
+if(t.id==='yr'){S.yr=t.value;dl()}
+if(t.id==='up-p'){S.up.p=t.value;updUp()}
+if(t.id==='up-f'&&t.files[0]){S.up.file=t.files[0].name;render()}});
+render();
+</script></body></html>
