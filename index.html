@@ -70,6 +70,7 @@ const IC={grid:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3
 const I=n=>`<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IC[n]}</svg>`;
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const $=s=>document.querySelector(s);
+const SAMPLES=['Voorbeeld 1 · 32 min','Voorbeeld 2 · 41 min','Voorbeeld 3 · 27 min'];
 const MODS=['Dashboard','Deelnemers','Uploaden',"Video's",'Gebruikers'];
 const PAGES=[['dash','Dashboard','grid'],['deeln','Deelnemers','users'],['up','Uploaden','upload'],['vid',"Video's",'video'],['usr','Gebruikers','shield']];
 const TODAY=new Date().toLocaleDateString('nl-NL',{day:'numeric',month:'long',year:'numeric'});
@@ -94,7 +95,7 @@ up(){const u=S.up,vis=u.vis;let n=3;
 const who=vis==='roles'?['Admin','Researcher']:S.users.map(x=>x.name);
 return `<div class="wrap">${hd('upload','Sessie uploaden','Koppel een videobestand aan een deelnemer')}
 <div class="card"><span class="lbl"><i class="on">1</i>Kies een deelnemer</span><select id="up-p" aria-label="Deelnemer"><option value="">Selecteer een deelnemer…</option>${S.parts.map(p=>`<option ${u.p===p[0]?'selected':''}>${p[0]}</option>`).join('')}</select>
-<span class="lbl"><i class="${u.p?'on':''}">2</i>Kies een videobestand</span><label class="drop ${u.file?'has':''}" id="drop">${u.file?esc(u.file):'Klik om een bestand te kiezen'}<input type="file" id="up-f" accept="video/*" hidden></label>
+<span class="lbl"><i class="${u.p?'on':''}">2</i>Kies een videobestand</span><label class="drop ${u.file?'has':''}" id="drop">${u.file?esc(u.file):'Klik om een bestand te kiezen'}<input type="file" id="up-f" accept="video/*" hidden></label><p class="hint" style="margin:12px 0 6px">Geen bestand bij de hand? Kies een voorbeeldvideo:</p><div class="seg">${SAMPLES.map((t,k)=>`<button data-a="smp" data-v="${k}" aria-pressed="${u.sample===k+1}" class="${u.sample===k+1?'on':''}">${t}</button>`).join('')}</div>
 <span class="lbl"><i class="${u.file?'on':''}">3</i>Wie mag dit zien?</span>
 <div class="seg">${[['all','Iedereen'],['roles','Bepaalde rollen'],['people','Specifieke personen']].map(([k,t])=>`<button data-a="vis" data-v="${k}" class="${vis===k?'on':''}">${t}</button>`).join('')}</div>
 <p class="hint">${vis==='all'?'Zichtbaar voor alle gebruikers met toegang tot het platform.':vis==='roles'?'Alleen zichtbaar voor gebruikers met een van deze rollen.':'Alleen zichtbaar voor de personen die je aanvinkt.'}</p>
@@ -150,7 +151,7 @@ const r=document.documentElement;S.theme==='system'?r.removeAttribute('data-them
 function userDlg(id){const u=S.users.find(x=>x.id==id)||{id:0,name:'',role:'Researcher',mods:[]};const d=$('#dlg');
 d.innerHTML=`<h2 style="margin-top:0">${u.id?'Gebruiker bewerken':'Nieuwe gebruiker'}</h2><span class="lbl">Gebruikersnaam</span><input type="text" id="un" value="${esc(u.name)}" ${u.id?'disabled':''}><span class="lbl">Rol</span><select id="ur"><option ${u.role==='Admin'?'selected':''}>Admin</option><option ${u.role!=='Admin'?'selected':''}>Researcher</option></select><span class="lbl">Toegang tot modules</span><p class="hint" style="margin-top:0">Admins hebben altijd volledige toegang.</p>${MODS.map(m=>`<label class="chk"><input type="checkbox" class="um" value="${m}" ${u.mods.includes(m)?'checked':''}>${m}</label>`).join('')}<div class="row" style="justify-content:flex-end;margin-top:14px"><button class="btn o" data-a="close">Annuleren</button><button class="btn" data-a="saveU" data-v="${u.id}">Opslaan</button></div>`;d.showModal()}
 const A={
-go(v){S.page=v;window.scrollTo(0,0);render()},view(v){S.cur=+v;S.page='det';window.scrollTo(0,0);render()},mom(v){toast('Springt naar '+v+' in de video (demo)')},toast(v){toast(v)},tab(v){S.tab=v;render()},flt(v){S.filter=v;render()},
+smp(v){const k=+v;if(S.up.sample===k+1){S.up.sample=0;S.up.file=''}else{S.up.sample=k+1;S.up.file=SAMPLES[k]}render()},go(v){S.page=v;window.scrollTo(0,0);render()},view(v){S.cur=+v;S.page='det';window.scrollTo(0,0);render()},mom(v){toast('Springt naar '+v+' in de video (demo)')},toast(v){toast(v)},tab(v){S.tab=v;render()},flt(v){S.filter=v;render()},
 vis(v){S.up.vis=v;S.up.who=[];render()},
 who(v,t){const w=S.up.who;t.checked?w.push(v):S.up.who=w.filter(x=>x!==v)},
 send(){const u=S.up,n=new Date(),d=TODAY+' om '+n.toLocaleTimeString('nl-NL',{hour:'2-digit',minute:'2-digit'});S.vids.unshift({id:S.vids[0].id+1,p:u.p,d,st:'Wachtend',vis:u.vis,who:u.vis==='all'?[]:u.who.slice()});S.up={p:'',file:'',vis:'all',who:[]};toast('Sessie geüpload. Zichtbaar voor: '+visTxt(S.vids[0]));S.page='vid';render()},
@@ -172,6 +173,6 @@ document.addEventListener('input',e=>{if(e.target.id==='q'){S.q=e.target.value;d
 document.addEventListener('change',e=>{const t=e.target;
 if(t.id==='yr'){S.yr=t.value;dl()}
 if(t.id==='up-p'){S.up.p=t.value;updUp()}
-if(t.id==='up-f'&&t.files[0]){S.up.file=t.files[0].name;render()}});
+if(t.id==='up-f'&&t.files[0]){S.up.file=t.files[0].name;S.up.sample=0;render()}});
 render();
 </script></body></html>
